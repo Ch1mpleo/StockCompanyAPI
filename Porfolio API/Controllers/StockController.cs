@@ -4,6 +4,7 @@ using Repository;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interfaces;
 using Repository.DTOs.Stock;
+using Repository.Helpers;
 
 namespace Porfolio_API.Controllers
 {
@@ -20,13 +21,13 @@ namespace Porfolio_API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObjectStock query)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var stocks = await _stockRepo.GetAllAsync();
+            var stocks = await _stockRepo.GetAllAsync(query);
             var stockDTO = stocks.Select(s => s.ToStockDTO());
             return Ok(stockDTO);
         }

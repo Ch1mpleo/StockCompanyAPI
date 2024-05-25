@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Repository;
 using Repository.DTOs.Comment;
+using Repository.Helpers;
 using Repository.Interfaces;
 using Services.Mappers;
 
@@ -19,13 +20,13 @@ namespace Porfolio_API.Controllers
             _stockRepo = stockRepo;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObjectComment query)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var comments = await _commentRepo.GetAllAsync();
+            var comments = await _commentRepo.GetAllAsync(query);
             var commentDTO = comments.Select(c => c.ToCommentDTO());
             return Ok(commentDTO);
         }

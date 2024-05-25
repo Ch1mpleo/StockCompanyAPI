@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Porfolio_API.Models;
 using Repository.DTOs.Stock;
+using Repository.Helpers;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,34 @@ namespace Repository.Repositories
         {
             _context = context;
         }
-        public async Task<List<Stock>> GetAllAsync()
+        public async Task<List<Stock>> GetAllAsync(QueryObjectStock query)
         {
-            return await _context.Stocks.Include(s => s.Comments).ToListAsync();
+            var stocks = _context.Stocks.Include(s => s.Comments).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.CompanyName) )
+            {
+                stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.Symbol) )
+            {
+                stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
+            }
+
+            //So sánh theo bảng chữ cái giảm dần
+            if (!string.IsNullOrWhiteSpace(query.SortBy) )
+            {
+                if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+                {
+                    stocks = query.IsDescending 
+                           ? stocks.OrderByDescending(s => s.Symbol)
+                           : stocks.OrderBy(s => s.Symbol);
+                }
+            }
+
+            //Paging
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+            return await stocks.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
@@ -74,5 +100,6 @@ namespace Repository.Repositories
         {
             return _context.Stocks.Any(s => s.Id == id);
         }
+
     }
 }

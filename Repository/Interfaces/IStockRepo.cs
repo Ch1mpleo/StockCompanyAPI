@@ -1,6 +1,7 @@
 ﻿using Porfolio_API.Models;
 using Repository.DTOs;
 using Repository.DTOs.Stock;
+using Repository.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Repository.Interfaces
 {
     public interface IStockRepo
     {
-        Task<List<Stock>> GetAllAsync();
+        Task<List<Stock>> GetAllAsync(QueryObjectStock query);
 
         //? để tránh null khi sử dụng FirstOrDefault
         Task<Stock?> GetByIdAsync(int id);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Porfolio_API.Models;
 using Repository.DTOs.Comment;
+using Repository.Helpers;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,30 @@ namespace Repository.Repositories
 
             _context = context;
         }
-        public async Task<List<Comment>> GetAllAsync()
+        public async Task<List<Comment>> GetAllAsync(QueryObjectComment query)
         {
-            return await _context.Comments.ToListAsync();
+            var comments = _context.Comments.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.Title) )
+            {
+                comments = comments.Where(c => c.Title.Contains(query.Title));
+            }
+            if (!string.IsNullOrWhiteSpace(query.Content) )
+            {
+                comments = comments.Where(c => c.Content.Contains(query.Content));  
+            }
+            
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                if (query.SortBy.Equals("DateTime", StringComparison.OrdinalIgnoreCase))
+                {
+                    comments = query.IsDescending
+                        ? comments.OrderByDescending(c => c.CreatedOn)
+                        : comments.OrderBy(c => c.CreatedOn);
+                }
+            }
+
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+            return await comments.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Comment?> GetByIdAsync(int id)

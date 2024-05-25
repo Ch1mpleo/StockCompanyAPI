@@ -30,7 +30,7 @@ namespace Repository.Helpers
                     MarketCap = _faker.Random.Long(100000000, 100000000000),
                     Comments = new List<Comment>()
                 };
-
+                
                 for (int j = 0; j < commentsPerStock; j++)
                 {
                     var comment = new Comment
