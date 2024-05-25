@@ -1,7 +1,11 @@
 ﻿
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Repository;
+using Repository.Entities;
 using Repository.Helpers;
 using Repository.Interfaces;
 using Repository.Repositories;
@@ -34,6 +38,40 @@ namespace Porfolio_API
                 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            //Add Identity - và setting password
+            builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+            }).AddEntityFrameworkStores<ApplicationDBContext>();
+
+            //Add thêm scheme JWT (hoặc setup cookie nếu có) sau khi add identity 
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = 
+                options.DefaultChallengeScheme = 
+                options.DefaultForbidScheme = 
+                options.DefaultScheme =
+                options.DefaultSignInScheme = 
+                options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration["JWT:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["JWT:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
+                    )
+                };
+            });
+
+
             //AddScoped (interfaced, or sth else) 
             builder.Services.AddScoped<DummyDataGenerator>();
             builder.Services.AddScoped<IStockRepo, StockRepository>();
@@ -51,6 +89,7 @@ namespace Porfolio_API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
