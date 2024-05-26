@@ -10,11 +10,11 @@ namespace Repository.DTOs.Account
     public class RegisterDTO
     {
         [Required]
-        public string? Email { get; set; }
+        public string? UserName { get; set; }
 
         [Required]
         [EmailAddress]
-        public string? EmailAddress { get; set; }
+        public string? Email { get; set; }
 
         [Required]
         public string? Password { get; set; }
