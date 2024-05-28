@@ -9,6 +9,7 @@ using Repository.Entities;
 using Repository.Helpers;
 using Repository.Interfaces;
 using Repository.Repositories;
+using Services.Services;
 
 namespace Porfolio_API
 {
@@ -72,10 +73,12 @@ namespace Porfolio_API
             });
 
 
-            //AddScoped (interfaced, or sth else) 
+            //Add dependency injection (interfaced, or sth else) 
             builder.Services.AddScoped<DummyDataGenerator>();
             builder.Services.AddScoped<IStockRepo, StockRepository>();
             builder.Services.AddScoped<ICommentRepo, CommentRepository>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+
 
             //Build khởi động 
             var app = builder.Build();
