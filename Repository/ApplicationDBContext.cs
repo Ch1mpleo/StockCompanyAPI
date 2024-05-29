@@ -22,11 +22,27 @@ namespace Repository
         //DbSet là cách ta sử dụng để manipulate data trong table - và cũng giúp EF tự create db
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Portfolio> Portfolio { get; set; }
 
         //Khởi tạo 1 role mặc định ban đầu 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            //add foreign key của (stock và appuser)
+            builder.Entity<Portfolio>(x => x.HasKey(p => new { p.AppUserId, p.StockId }));
+
+            builder.Entity<Portfolio>()
+                .HasOne(x => x.AppUser)
+                .WithMany(x => x.Portfolios)
+                .HasForeignKey(p => p.AppUserId);
+
+            builder.Entity<Portfolio>()
+                .HasOne(x => x.Stock)
+                .WithMany(x => x.Portfolios)
+                .HasForeignKey(p => p.StockId);
+
+
             List<IdentityRole> roles = new List<IdentityRole>
             {
                 new IdentityRole

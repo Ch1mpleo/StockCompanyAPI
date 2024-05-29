@@ -10,6 +10,7 @@ namespace Repository.Entities
 {
     public class AppUser : IdentityUser
     {
-
+        //many - many
+        public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
     }
 }

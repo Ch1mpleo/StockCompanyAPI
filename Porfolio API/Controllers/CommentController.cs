@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Repository;
 using Repository.DTOs.Comment;
@@ -19,6 +20,7 @@ namespace Porfolio_API.Controllers
             _commentRepo = commentRepo;
             _stockRepo = stockRepo;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] QueryObjectComment query)
         {
@@ -30,6 +32,7 @@ namespace Porfolio_API.Controllers
             var commentDTO = comments.Select(c => c.ToCommentDTO());
             return Ok(commentDTO);
         }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {

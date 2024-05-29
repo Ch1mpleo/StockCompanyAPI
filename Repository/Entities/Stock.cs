@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Repository.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Porfolio_API.Models
 {
+    [Table("Stocks")]
     public class Stock
     {
         public int Id { get; set; }
@@ -19,6 +21,7 @@ namespace Porfolio_API.Models
 
         //1 - many 
         public List<Comment> Comments { get; set; } = new List<Comment>();
-
+        //many - many
+        public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
     }
 }
