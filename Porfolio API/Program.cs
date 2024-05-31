@@ -108,7 +108,7 @@ namespace Porfolio_API
             builder.Services.AddScoped<IStockRepo, StockRepository>();
             builder.Services.AddScoped<ICommentRepo, CommentRepository>();
             builder.Services.AddScoped<ITokenService, TokenService>();
-
+            builder.Services.AddScoped<IPortfolioRepo, PortfolioRepository>();
 
             //Build khởi động 
             var app = builder.Build();

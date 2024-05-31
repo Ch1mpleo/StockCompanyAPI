@@ -14,7 +14,7 @@ namespace Porfolio_API.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        //Sử dụng thằng UserManager của JWT
+        //Sử dụng thằng UserManager của Identity Asp.net
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
@@ -34,13 +34,14 @@ namespace Porfolio_API.Controllers
             }
 
             //Password sẽ nhận 2 đầu vào - userName và password 
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == dto.EmailOrUsername || u.UserName == dto.EmailOrUsername);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == dto.Username);
             if (user == null)
             {
                 return Unauthorized("Username or email not found !!!");
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
+
             if (!result.Succeeded)
             {
                 return Unauthorized("Invalid password.");

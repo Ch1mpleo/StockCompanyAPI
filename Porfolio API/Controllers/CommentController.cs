@@ -22,6 +22,7 @@ namespace Porfolio_API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] QueryObjectComment query)
         {
             if (!ModelState.IsValid)
