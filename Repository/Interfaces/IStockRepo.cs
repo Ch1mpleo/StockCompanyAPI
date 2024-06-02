@@ -16,6 +16,7 @@ namespace Repository.Interfaces
 
         //? để tránh null khi sử dụng FirstOrDefault
         Task<Stock?> GetByIdAsync(int id);
+        Task<Stock?> GetBySymbolAsync(string symbol);
         Task<Stock?> CreateAsync(Stock stockModel);
         Task<Stock?> UpdateAsync(int id, UpdateStockRequestDTO dto);
         Task<Stock?> DeleteAsync(int id);

@@ -29,7 +29,7 @@ namespace Repository
         {
             base.OnModelCreating(builder);
 
-            //add foreign key của (stock và appuser)
+            //add foreign key của (stock và appuser vào bên trong table Portfolio)
             builder.Entity<Portfolio>(x => x.HasKey(p => new { p.AppUserId, p.StockId }));
 
             builder.Entity<Portfolio>()
@@ -58,6 +58,11 @@ namespace Repository
             };
             
             builder.Entity<IdentityRole>().HasData(roles);
+        }
+
+        public void SeedData()
+        {
+
         }
     }
 }
