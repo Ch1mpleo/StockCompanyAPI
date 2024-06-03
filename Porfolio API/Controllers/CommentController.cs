@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Repository;
 using Repository.DTOs.Comment;
+using Repository.Entities;
 using Repository.Helpers;
 using Repository.Interfaces;
+using Services.Extensions;
 using Services.Mappers;
 
 namespace Porfolio_API.Controllers
@@ -15,10 +18,12 @@ namespace Porfolio_API.Controllers
     {
         private readonly ICommentRepo _commentRepo;
         private readonly IStockRepo _stockRepo;
-        public CommentController(ICommentRepo commentRepo, IStockRepo stockRepo)
+        private readonly UserManager<AppUser> _userManager;
+        public CommentController(ICommentRepo commentRepo, IStockRepo stockRepo, UserManager<AppUser> userManager)
         {
             _commentRepo = commentRepo;
             _stockRepo = stockRepo;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -60,7 +65,14 @@ namespace Porfolio_API.Controllers
             {
                 return BadRequest("Stock not found !!!");
             }
+
+            var username = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(username);
+
             var comment = dto.ToCommentFromCreate(stockId);
+
+            comment.AppUserId = appUser.Id;
+
             await _commentRepo.CreateAsync(comment);
             return CreatedAtAction(nameof(GetById), new { id = comment.Id }, comment.ToCommentDTO());
         }
@@ -72,7 +84,7 @@ namespace Porfolio_API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var comment = await _commentRepo.UpdateAsync(id, dto.ToCommentFromUpdate());
+            var comment = await _commentRepo.UpdateAsync(id, dto.ToCommentFromUpdate(id));
             if (comment == null)
             {
                 return NotFound("Comment not found !!!");

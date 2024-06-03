@@ -10,15 +10,16 @@ namespace Services.Mappers
 {
     public static class CommentMappers
     {
-        public static CommentDTO ToCommentDTO(this Comment dto)
+        public static CommentDTO ToCommentDTO(this Comment commentModel)
         {
             return new CommentDTO
             {
-                Id = dto.Id,
-                Title = dto.Title,
-                Content = dto.Content,
-                CreatedOn = dto.CreatedOn,
-                StockId = dto.StockId,
+                Id = commentModel.Id,
+                Title = commentModel.Title,
+                Content = commentModel.Content,
+                CreatedOn = commentModel.CreatedOn,
+                CreatedBy = commentModel.AppUser.UserName,
+                StockId = commentModel.StockId,
             };
         }
         public static Comment ToCommentFromCreate(this CreateCommentDTO dto, int stockId)
@@ -31,12 +32,13 @@ namespace Services.Mappers
             };
         }
 
-        public static Comment ToCommentFromUpdate(this UpdateCommentRequestDTO dto)
+        public static Comment ToCommentFromUpdate(this UpdateCommentRequestDTO dto, int stockId)
         {
             return new Comment
             {
                 Title = dto.Title,
                 Content = dto.Content,
+                StockId = stockId,
             };
         }
 

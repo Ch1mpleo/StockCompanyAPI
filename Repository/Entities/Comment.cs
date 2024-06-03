@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Repository.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Porfolio_API.Models
 {
@@ -15,5 +16,9 @@ namespace Porfolio_API.Models
         public int? StockId { get; set; }
         //- Navigation property
         public Stock? Stock { get; set; }
+
+        //1 - 1 với user 
+        public string AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }
