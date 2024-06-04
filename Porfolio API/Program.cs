@@ -30,7 +30,7 @@ namespace Porfolio_API
             //add Swagger JWT Setup
             builder.Services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Stock Company API", Version = "v1" });
                 option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -112,6 +112,8 @@ namespace Porfolio_API
             builder.Services.AddScoped<ICommentRepo, CommentRepository>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IPortfolioRepo, PortfolioRepository>();
+            builder.Services.AddScoped<IFMPService,  FMPService>();
+            builder.Services.AddHttpClient<IFMPService, FMPService>();
 
             //Build khởi động 
             var app = builder.Build();

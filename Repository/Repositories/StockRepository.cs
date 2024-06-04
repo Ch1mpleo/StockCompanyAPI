@@ -96,14 +96,14 @@ namespace Repository.Repositories
             return stockModel;
         }
 
-        public async Task<bool> StockExist(int id)
-        {
-            return _context.Stocks.Any(s => s.Id == id);
-        }
-
         public async Task<Stock?> GetBySymbolAsync(string symbol)
         {
             return await _context.Stocks.FirstOrDefaultAsync(s => s.Symbol == symbol);
+        }
+
+        public Task<bool> StockExist(int id)
+        {
+            return _context.Stocks.AnyAsync(s => s.Id == id);
         }
     }
 }
