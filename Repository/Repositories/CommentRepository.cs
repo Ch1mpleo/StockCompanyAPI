@@ -22,6 +22,10 @@ namespace Repository.Repositories
         public async Task<List<Comment>> GetAllAsync(QueryObjectComment query)
         {
             var comments = _context.Comments.Include(a => a.AppUser).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.Symbol))
+            {
+                comments = comments.Where(s => s.Stock.Symbol == query.Symbol);
+            };
             if (!string.IsNullOrWhiteSpace(query.Title) )
             {
                 comments = comments.Where(c => c.Title.Contains(query.Title));

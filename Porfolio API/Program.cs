@@ -127,6 +127,14 @@ namespace Porfolio_API
 
             app.UseHttpsRedirection();
 
+            //Add CORS
+            app.UseCors(x => x
+                .AllowCredentials()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .SetIsOriginAllowed(origin => true));
+            //.WithOrigin("https://localhost:3000"));  thêm vào khi host backend
+
             app.UseAuthentication();
             app.UseAuthorization();
 

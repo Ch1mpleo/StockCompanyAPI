@@ -8,6 +8,7 @@ namespace Repository.Helpers
 {
     public class QueryObjectComment
     {
+        public string? Symbol {  get; set; } 
         public string? Title { get; set; } = null;
         public string? Content { get; set; } = null;
         public DateTime CreatedOn { get; set; } = DateTime.Now;
